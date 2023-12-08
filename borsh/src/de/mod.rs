@@ -746,6 +746,16 @@ impl BorshDeserialize for std::path::PathBuf {
     }
 }
 
+#[cfg(feature = "std")]
+impl<T> BorshDeserialize for std::cmp::Reverse<T>
+where
+    T: BorshDeserialize,
+{
+    fn deserialize_reader<R: Read>(reader: &mut R) -> Result<Self> {
+        <T as BorshDeserialize>::deserialize_reader(reader).map(Self)
+    }
+}
+
 impl<T, const N: usize> BorshDeserialize for [T; N]
 where
     T: BorshDeserialize,

@@ -560,6 +560,16 @@ impl BorshSerialize for std::path::PathBuf {
     }
 }
 
+#[cfg(feature = "std")]
+impl<T> BorshSerialize for std::cmp::Reverse<T>
+where
+    T: BorshSerialize,
+{
+    fn serialize<W: Write>(&self, writer: &mut W) -> Result<()> {
+        <T as BorshSerialize>::serialize(&self.0, writer)
+    }
+}
+
 impl<T, const N: usize> BorshSerialize for [T; N]
 where
     T: BorshSerialize,
