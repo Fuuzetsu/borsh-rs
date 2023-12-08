@@ -738,6 +738,14 @@ impl BorshDeserialize for std::time::SystemTime {
     }
 }
 
+#[cfg(feature = "std")]
+impl BorshDeserialize for std::path::PathBuf {
+    fn deserialize_reader<R: Read>(reader: &mut R) -> Result<Self> {
+        let s = <String as BorshDeserialize>::deserialize_reader(reader)?;
+        Ok(Self::from(s))
+    }
+}
+
 impl<T, const N: usize> BorshDeserialize for [T; N]
 where
     T: BorshDeserialize,

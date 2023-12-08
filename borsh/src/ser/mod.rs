@@ -540,6 +540,26 @@ impl BorshSerialize for std::time::SystemTime {
     }
 }
 
+#[cfg(feature = "std")]
+impl BorshSerialize for std::path::Path {
+    fn serialize<W: Write>(&self, writer: &mut W) -> Result<()> {
+        match self.to_str() {
+            Some(s) => <str as BorshSerialize>::serialize(s, writer),
+            None => Err(Error::new(
+                ErrorKind::InvalidData,
+                "path contains invalid UTF-8 characters",
+            )),
+        }
+    }
+}
+
+#[cfg(feature = "std")]
+impl BorshSerialize for std::path::PathBuf {
+    fn serialize<W: Write>(&self, writer: &mut W) -> Result<()> {
+        <std::path::Path as BorshSerialize>::serialize(self.as_path(), writer)
+    }
+}
+
 impl<T, const N: usize> BorshSerialize for [T; N]
 where
     T: BorshSerialize,
