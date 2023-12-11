@@ -1,4 +1,3 @@
-use super::cratename::BORSH;
 use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
@@ -53,7 +52,7 @@ macro_rules! local_insta_assert_snapshot {
 }
 
 pub(crate) fn default_cratename() -> Path {
-    let cratename = Ident::new(BORSH, Span::call_site());
+    let cratename = Ident::new("borsh", Span::call_site());
     cratename.into()
 }
 
